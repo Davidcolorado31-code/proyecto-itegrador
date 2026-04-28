@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Seguimiento de Avance</title>
+  <style>
+    body { font-family: Arial; margin: 40px; }
+    input, button { margin: 5px; padding: 5px; }
+    .seccion { margin-bottom: 30px; }
+  </style>
+</head>
+<body>
+
+  <h1>Sistema de Avance del Estudiante</h1>
+
+  <!-- DOCENTE -->
+  <div class="seccion">
+    <h2>Docente - Registrar avance</h2>
+    <input type="text" id="docEstudiante" placeholder="Nombre del estudiante">
+    <input type="number" id="docAvance" placeholder="Avance (0-100)" min="0" max="100">
+    <button onclick="guardarAvance()">Guardar</button>
+    <p id="mensajeDocente"></p>
+  </div>
+
+  <!-- ESTUDIANTE -->
+  <div class="seccion">
+    <h2>Estudiante - Consultar avance</h2>
+    <input type="text" id="estNombre" placeholder="Nombre del estudiante">
+    <button onclick="consultarAvance()">Consultar</button>
+    <p id="resultado"></p>
+  </div>
+
+  <script>
+    function guardarAvance() {
+      const nombre = document.getElementById("docEstudiante").value.trim();
+      const avance = parseInt(document.getElementById("docAvance").value);
+
+      if (!nombre || isNaN(avance) || avance < 0 || avance > 100) {
+        document.getElementById("mensajeDocente").innerText = "Datos inválidos";
+        return;
+      }
+
+      localStorage.setItem(nombre, avance);
+      document.getElementById("mensajeDocente").innerText = "Avance guardado correctamente";
+    }
+
+    function consultarAvance() {
+      const nombre = document.getElementById("estNombre").value.trim();
+      const avance = localStorage.getItem(nombre);
+
+      if (avance === null) {
+        document.getElementById("resultado").innerText = "Estudiante no encontrado";
+      } else {
+        document.getElementById("resultado").innerText = 
+          "El avance de " + nombre + " es: " + avance + "%";
+      }
+    }
+  </script>
+
+</body>
+</html>
