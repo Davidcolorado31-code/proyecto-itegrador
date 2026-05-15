@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    
+    <meta charset="UTF-8">
+    <title>Evaluación de Sesiones</title>
+    <link rel="stylesheet" href="./estilos/estilos.css">
+</head>
+<body>
+    
+<img src="imagenes" alt="">
+<div class="container">
+
+    
+    <h2>Evaluar sesión / mentor</h2>
+
+    <label>Clase:</label>
+    <select id="clase">
+        <option value="">-- Selecciona --</option>
+        <option value="Matemática">Matemática Juan</option>
+        <option value="Inglés">Inglés Camila</option>
+        <option value="Cálculo">Cálculo Aramando</option>
+        <option value="Programación">Programación Pedro</option>
+    </select>
+
+    <label>Calificación (1 a 10):</label>
+    <input type="number" id="calificacion">
+
+    <label>Comentario:</label>
+    <textarea id="comentario"></textarea>
+
+    <button onclick="guardarEvaluacion()">Guardar</button>
+
+    <hr>
+
+    <h3>Consultar calificaciones</h3>
+    <select id="consultaClase">
+        <option value="">-- Selecciona --</option>
+        <option value="Matemática">Matemática Juan</option>
+        <option value="Inglés">Inglés Camila</option>
+        <option value="Cálculo">Cálculo Aramando</option>
+        <option value="Programación">Programación Pedro</option>
+    </select>
+
+    <button onclick="consultar()">Consultar</button>
+
+    <p id="mensaje"></p>
+    <div id="resultado" class="resultado"></div>
+</div>
+
+<script>
+let evaluaciones = [];
+
+function guardarEvaluacion() {
+    let clase = document.getElementById("clase").value;
+    let calificacion = parseInt(document.getElementById("calificacion").value);
+    let comentario = document.getElementById("comentario").value;
+    let mensaje = document.getElementById("mensaje");
+
+    if (clase === "") {
+        mensaje.textContent = "Error: selecciona una clase.";
+        mensaje.className = "error";
+        return;
+    }
+
+    if (isNaN(calificacion) || calificacion < 1 || calificacion > 10) {
+        mensaje.textContent = "Error: calificación debe ser de 1 a 10.";
+        mensaje.className = "error";
+        return;
+    }
+
+    evaluaciones.push({ clase, calificacion, comentario });
+
+    mensaje.textContent = "Evaluación guardada.";
+    mensaje.className = "success";
+
+    document.getElementById("calificacion").value = "";
+    document.getElementById("comentario").value = "";
+}
+
+function consultar() {
+    let clase = document.getElementById("consultaClase").value;
+    let resultado = document.getElementById("resultado");
+
+    if (clase === "") {
+        resultado.innerHTML = "Selecciona una clase.";
+        return;
+    }
+
+    let filtradas = evaluaciones.filter(e => e.clase === clase);
+
+    if (filtradas.length === 0) {
+        resultado.innerHTML = "No hay evaluaciones para esta clase.";
+        return;
+    }
+
+    let lista = "";
+    let suma = 0;
+
+    filtradas.forEach(e => {
+        lista += `<p>Calificación: ${e.calificacion} - Comentario: ${e.comentario}</p>`;
+        suma += e.calificacion;
+    });
+
+    let promedio = (suma / filtradas.length).toFixed(2);
+
+    resultado.innerHTML = `
+        <strong>Resultados para ${clase}:</strong>
+        ${lista}
+        <p><strong>Promedio: ${promedio}</strong></p>
+    `;
+}
+</script>
+
+</body>
+</html>
